@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <properties url="file://${GENERATOR_PROPERTIES_PATH}" />
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="&quot;"/>
+        <property name="endingDelimiter" value="&quot;"/>
+
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin" />
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$"/>
+            <property name="replaceString" value="Criteria"/>
+        </plugin>
+<!--        <plugin type="org.mybatis.generator.plugins.FluentBuilderMethodsPlugin" />-->
+        <plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin">
+            <!-- enable annotations -->
+            <property name="builder" value="true"/>
+            <!-- annotation's option(boolean) -->
+            <property name="builder.fluent" value="true"/>
+            <!-- annotation's option(String) -->
+            <property name="builder.builderMethodName" value="builder"/>
+            <property name="accessors" value="true"/>
+            <!-- annotation's option(array of String) -->
+            <property name="accessors.prefix" value="m_, _"/>
+            <!-- disable annotations -->
+            <property name="allArgsConstructor" value="false"/>
+            <property name="toString" value="true"/>
+        </plugin>
+
+        <commentGenerator>
+            <property name="suppressDate" value="true" />
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="${database.url}"
+                        userId="${database.user}"
+                        password="${database.password}">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+            <property name="useJSR310Types" value="true" />
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="top.lyriclaw.spm.db.model" targetProject="${SOURCE_PATH}">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="top.lyriclaw.spm.db.mapper" targetProject="${RESOURCE_PATH}">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="top.lyriclaw.spm.db.mapper" targetProject="${SOURCE_PATH}">
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+
+        <table schema="project" tableName="patch"
+               domainObjectName="PatchModel"
+               mapperName="BasePatchMapper"
+               enableInsert="true"
+               enableSelectByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableCountByExample="true"
+               enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true">
+            <property name="useActualColumnNames" value="false" />
+            <generatedKey column="id" sqlStatement="JDBC" identity="true" />
+            <columnOverride column="id" javaType="java.lang.Long" />
+            <columnOverride column="updated_at" javaType="java.time.Instant" isGeneratedAlways="true" />
+            <columnOverride column="created_at" javaType="java.time.Instant" isGeneratedAlways="true" />
+        </table>
+
+        <table schema="project" tableName="storage"
+               domainObjectName="StorageModel"
+               mapperName="BaseStorageMapper"
+               enableInsert="true"
+               enableSelectByExample="true"
+               enableUpdateByExample="true"
+               enableDeleteByExample="true"
+               enableCountByExample="true"
+               enableSelectByPrimaryKey="true"
+               enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true">
+            <property name="useActualColumnNames" value="false" />
+            <columnOverride column="id" javaType="java.util.UUID" typeHandler="top.lyriclaw.spm.db.typehandler.UuidTypeHandler" />
+            <columnOverride column="updated_at" javaType="java.time.Instant" isGeneratedAlways="true" />
+            <columnOverride column="created_at" javaType="java.time.Instant" isGeneratedAlways="true" />
+        </table>
+
+    </context>
+</generatorConfiguration>

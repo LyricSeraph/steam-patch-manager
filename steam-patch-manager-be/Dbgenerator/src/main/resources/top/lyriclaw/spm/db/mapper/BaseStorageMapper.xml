@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.lyriclaw.spm.db.mapper.BaseStorageMapper">
+  <resultMap id="BaseResultMap" type="top.lyriclaw.spm.db.model.StorageModel">
+    <id column="id" jdbcType="OTHER" property="id" typeHandler="top.lyriclaw.spm.db.typehandler.UuidTypeHandler" />
+    <result column="storage_type" jdbcType="VARCHAR" property="storageType" />
+    <result column="patch_id" jdbcType="BIGINT" property="patchId" />
+    <result column="filename" jdbcType="VARCHAR" property="filename" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="size" jdbcType="BIGINT" property="size" />
+    <result column="md5" jdbcType="VARCHAR" property="md5" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.idCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler} and #{criterion.secondValue,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.idCriteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler} and #{criterion.secondValue,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, storage_type, patch_id, filename, description, "size", md5, created_at, updated_at
+  </sql>
+  <select id="selectByExample" parameterType="top.lyriclaw.spm.db.model.StorageModelCriteria" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from project.storage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.util.UUID" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from project.storage
+    where id = #{id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.util.UUID">
+    delete from project.storage
+    where id = #{id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.lyriclaw.spm.db.model.StorageModelCriteria">
+    delete from project.storage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.lyriclaw.spm.db.model.StorageModel">
+    insert into project.storage (id, 
+      storage_type, patch_id, filename, 
+      description, "size", md5
+      )
+    values (#{id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}, 
+      #{storageType,jdbcType=VARCHAR}, #{patchId,jdbcType=BIGINT}, #{filename,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{size,jdbcType=BIGINT}, #{md5,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="top.lyriclaw.spm.db.model.StorageModel">
+    insert into project.storage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storageType != null">
+        storage_type,
+      </if>
+      <if test="patchId != null">
+        patch_id,
+      </if>
+      <if test="filename != null">
+        filename,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="size != null">
+        "size",
+      </if>
+      <if test="md5 != null">
+        md5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler},
+      </if>
+      <if test="storageType != null">
+        #{storageType,jdbcType=VARCHAR},
+      </if>
+      <if test="patchId != null">
+        #{patchId,jdbcType=BIGINT},
+      </if>
+      <if test="filename != null">
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=BIGINT},
+      </if>
+      <if test="md5 != null">
+        #{md5,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.lyriclaw.spm.db.model.StorageModelCriteria" resultType="java.lang.Long">
+    select count(*) from project.storage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update project.storage
+    <set>
+      <if test="row.id != null">
+        id = #{row.id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler},
+      </if>
+      <if test="row.storageType != null">
+        storage_type = #{row.storageType,jdbcType=VARCHAR},
+      </if>
+      <if test="row.patchId != null">
+        patch_id = #{row.patchId,jdbcType=BIGINT},
+      </if>
+      <if test="row.filename != null">
+        filename = #{row.filename,jdbcType=VARCHAR},
+      </if>
+      <if test="row.description != null">
+        description = #{row.description,jdbcType=VARCHAR},
+      </if>
+      <if test="row.size != null">
+        "size" = #{row.size,jdbcType=BIGINT},
+      </if>
+      <if test="row.md5 != null">
+        md5 = #{row.md5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update project.storage
+    set id = #{row.id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler},
+      storage_type = #{row.storageType,jdbcType=VARCHAR},
+      patch_id = #{row.patchId,jdbcType=BIGINT},
+      filename = #{row.filename,jdbcType=VARCHAR},
+      description = #{row.description,jdbcType=VARCHAR},
+      "size" = #{row.size,jdbcType=BIGINT},
+      md5 = #{row.md5,jdbcType=VARCHAR}
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.lyriclaw.spm.db.model.StorageModel">
+    update project.storage
+    <set>
+      <if test="storageType != null">
+        storage_type = #{storageType,jdbcType=VARCHAR},
+      </if>
+      <if test="patchId != null">
+        patch_id = #{patchId,jdbcType=BIGINT},
+      </if>
+      <if test="filename != null">
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        "size" = #{size,jdbcType=BIGINT},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.lyriclaw.spm.db.model.StorageModel">
+    update project.storage
+    set storage_type = #{storageType,jdbcType=VARCHAR},
+      patch_id = #{patchId,jdbcType=BIGINT},
+      filename = #{filename,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      "size" = #{size,jdbcType=BIGINT},
+      md5 = #{md5,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=OTHER,typeHandler=top.lyriclaw.spm.db.typehandler.UuidTypeHandler}
+  </update>
+  <select id="selectByExampleWithRowbounds" parameterType="top.lyriclaw.spm.db.model.StorageModelCriteria" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from project.storage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+</mapper>

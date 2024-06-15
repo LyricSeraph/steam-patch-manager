@@ -26,4 +26,4 @@ services:
       - SPM_AUTH_KEY=REPLACE_WITH_YOUR_PRIVATE_KEY
       - SPM_LOCAL_STORAGE_PATH=/app/storage
     ports:
-      - 80:8080
+      - 80:80

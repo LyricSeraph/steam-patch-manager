@@ -147,6 +147,14 @@ function getFileInputName(fileId, key) {
   return "file-" + fileId + '-' + key
 }
 
+function displayMessageOrEmpty(msg) {
+  if (msg === null || msg === undefined || msg === "") {
+    return "(Empty)"
+  } else {
+    return msg
+  }
+}
+
 function uploadFile(option) {
   const form = new FormData()
   form.append('file', option.file)
@@ -238,7 +246,7 @@ onMounted(() => {
                         <el-link type="primary" :href="scope.row.value" target="_blank">{{ scope.row.value }}</el-link>
                       </template>
                       <template v-else>
-                        <label>{{ scope.row.value }}</label>
+                        <label>{{ displayMessageOrEmpty(scope.row.value) }}</label>
                       </template>
                       <template v-if="isAuthenticated">
                         <el-icon size="20" style="margin-left: 10px"

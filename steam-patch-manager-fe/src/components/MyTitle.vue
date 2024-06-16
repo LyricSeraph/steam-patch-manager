@@ -48,7 +48,7 @@ function onSubmit() {
   apis.createPatch(createPatchForm.value).then((resp) => {
     if (resp.status === 0) {
       emitter.emit(events.showMessage, {type: 'success', message: 'Patch created successfully.' })
-      emitter.emit(events.refresh)
+      emitter.emit(events.refreshAll)
     }
   })
 }

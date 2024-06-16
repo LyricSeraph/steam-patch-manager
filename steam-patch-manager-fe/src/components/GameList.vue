@@ -20,7 +20,7 @@ function selectGame(game) { // game: { appid: number, name: string }
 
 onMounted(() => {
   loadPatchedGameList()
-  emitter.on(events.refresh, () => {
+  emitter.on(events.refreshAll, () => {
     loadPatchedGameList()
   })
 })

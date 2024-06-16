@@ -20,6 +20,16 @@ function loadPatchesByGame(game, page, size, expandFirstPatch) {
   apis.getPatchesByAppid({
     appid: game.appid, page: page, size: size
   }).then(resp => {
+    for (const item of resp.data.data) {
+      item.attrs = []
+      for (const field of ['patchName', 'patchVersion', 'appVersion', 'description', 'reference']) {
+        let desc = { key: '', name: '', value: ''}
+        desc.key = field
+        desc.name = field
+        desc.value = item[field]
+        item.attrs.push(desc)
+      }
+    }
     patchList.value = resp.data.data;
     pageInfo.value = { total: resp.data.total, page: resp.data.page, size: resp.data.size }
     if (expandFirstPatch && patchList.value.length > 0) {
@@ -35,30 +45,30 @@ function showInputText(inputName, content) {
   }
 }
 
-function refreshThisPage() {
+function refresh() {
   inputTextState.value.content = ''
   inputTextState.value.visibleItem = ''
-  emitter.emit(events.refresh)
+  emitter.emit(events.refreshPatch)
 }
 
 function updatePatch(id, key, value) {
   apis.updatePatch({id: id, key: key, value: value})
       .then((response) => {
-        refreshThisPage()
+        refresh()
       })
 }
 
 function updateFile(id, key, value) {
   apis.updateFile({id: id, key: key, value: value})
       .then((response) => {
-        refreshThisPage()
+        refresh()
       })
 }
 
 function deletePatch(id) {
   apis.deletePatch({id: id})
       .then((response) => {
-        refreshThisPage()
+        refresh()
         emitter.emit(events.showMessage, { type: 'success', message: 'file deleted successfully.' })
       })
 }
@@ -66,7 +76,7 @@ function deletePatch(id) {
 function deleteFile(id) {
   apis.deleteFile({id: id})
       .then((response) => {
-        refreshThisPage()
+        refresh()
         emitter.emit(events.showMessage, { type: 'success', message: 'file deleted successfully.' })
       })
 }
@@ -91,19 +101,18 @@ function showUploadFileDialog(patchId) {
 function checkDialogUploadFinished(done) {
   let allFinished = true
   for (let file of uploadDialogState.value.fileList) {
-    console.log(JSON.stringify(file))
     if (file.status !== 'success') {
       allFinished = false
       break
     }
   }
   if (allFinished) {
-    emitter.emit(events.refresh)
+    emitter.emit(events.refreshPatch)
     done()
   } else {
     ElMessageBox.confirm('Are you sure to close this dialog? Files are not upload finished yet.')
         .then(() => {
-          emitter.emit(events.refresh)
+          emitter.emit(events.refreshPatch)
           done()
         })
   }
@@ -164,8 +173,12 @@ onMounted(() => {
       loadPatchesByGame(currentGame.value, pageInfo.value.page, pageInfo.value.size, true)
     }
   })
-  emitter.on(events.refresh, () => {
-    loadPatchesByGame(currentGame.value, pageInfo.value.page, pageInfo.value.size)
+  emitter.on(events.refreshAll, () => {
+    pageInfo.value.page = 1
+    loadPatchesByGame(currentGame.value, pageInfo.value.page, pageInfo.value.size, true)
+  })
+  emitter.on(events.refreshPatch, () => {
+    loadPatchesByGame(currentGame.value, pageInfo.value.page, pageInfo.value.size, false)
   })
 })
 
@@ -198,15 +211,8 @@ onMounted(() => {
         </template>
         <div>
           <div style="display: flex; flex-flow: row nowrap; justify-content: flex-start; align-items: end;">
-
             <el-table border stripe :show-header="false"
-                    :data="[
-                {key: 'patchName', name: 'Name'},
-                {key: 'patchVersion', name: 'Patch Version'},
-                {key: 'appVersion', name: 'Correspond Game Version'},
-                {key: 'description', name: 'Description'},
-                {key: 'reference', name: 'Reference URL'}
-            ]">
+                    :data="patch.attrs">
 
               <el-table-column label="field" width="180px">
                 <template #default="scope">
@@ -222,14 +228,14 @@ onMounted(() => {
                     <template v-if="inputTextState.visibleItem !== getPatchInputName(patch.id, scope.row.key)">
 
                       <template v-if="scope.row.key === 'reference'">
-                        <el-link type="primary" :href="patch[scope.row.key]" target="_blank">{{ patch[scope.row.key] }}</el-link>
+                        <el-link type="primary" :href="scope.row.value" target="_blank">{{ scope.row.value }}</el-link>
                       </template>
                       <template v-else>
-                        <label>{{ patch[scope.row.key] }}</label>
+                        <label>{{ scope.row.value }}</label>
                       </template>
                       <template v-if="isAuthenticated">
                         <el-icon size="20" style="margin-left: 10px"
-                                 @click="showInputText(getPatchInputName(patch.id, scope.row.key), patch[scope.row.key])"><Edit /></el-icon>
+                                 @click="showInputText(getPatchInputName(patch.id, scope.row.key), scope.row.value)"><Edit /></el-icon>
                       </template>
                     </template>
                     <template v-if="isAuthenticated && inputTextState.visibleItem === getPatchInputName(patch.id, scope.row.key)">

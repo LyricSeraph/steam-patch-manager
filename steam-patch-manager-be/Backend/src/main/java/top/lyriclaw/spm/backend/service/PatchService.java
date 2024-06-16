@@ -55,12 +55,13 @@ public class PatchService {
     public List<PatchModel> getPatchesByAppId(long appId) {
         var patchCriteria = new PatchModelCriteria();
         patchCriteria.createCriteria().andAppIdEqualTo(appId);
+        patchCriteria.setOrderByClause("created_at asc");
         return patchMapper.selectByExample(patchCriteria);
-
     }
 
     public List<PatchModel> getAll() {
         var patchCriteria = new PatchModelCriteria();
+        patchCriteria.setOrderByClause("created_at asc");
         return patchMapper.selectByExample(patchCriteria);
     }
 
@@ -70,6 +71,7 @@ public class PatchService {
         if (appid != null) {
             patchCriteria.createCriteria().andAppIdEqualTo(appid);
         }
+        patchCriteria.setOrderByClause("created_at asc");
         long count = patchMapper.countByExample(patchCriteria);
         var list = patchMapper.selectByExampleWithRowbounds(patchCriteria, new RowBounds(offset, size));
         return MyPage.<PatchModel>builder()

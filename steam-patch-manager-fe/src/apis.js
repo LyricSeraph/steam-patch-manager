@@ -15,9 +15,7 @@ instance.interceptors.request.use(function (config) {
     let epoch = Date.now() / 1000
     let currentMinute = (epoch - epoch % 60) / 60
     let minutePart = md5("" + currentMinute).toUpperCase()
-    console.log("minutePart: " + minutePart)
     let keyPart = md5((store.state.authKey + salt).toUpperCase()).toUpperCase()
-    console.log("keyPart: " + keyPart)
     let tokenValue = md5(minutePart + keyPart).toUpperCase()
     config.headers["Auth-Token"] = tokenValue
     return config;
@@ -29,7 +27,6 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    console.log("response: ", response)
     let payload = response.data
     if (payload.status === null || payload.status !== 0) {
         emitter.emit(events.showMessage, {

@@ -33,15 +33,16 @@ public class GamesController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ApiResp<List<GameVo>> getGamesWithPatch() {
         var patchList = patchService.getAll();
-        var resultList = new ArrayList<GameVo>();
         var appidSet = patchList.stream()
                 .map(PatchModel::getAppId)
                 .collect(Collectors.toSet());
-        for (var appid: appidSet) {
-            String name = steamGameService.getAppNameById(appid);
-            name = StringUtils.hasLength(name) ? name : "";
-            resultList.add(new GameVo(appid, name));
-        }
+        var resultList = appidSet.stream().sorted()
+                .map((appid) -> {
+                    String name = steamGameService.getAppNameById(appid);
+                    name = StringUtils.hasLength(name) ? name : "";
+                    return new GameVo(appid, name);
+                })
+                .collect(Collectors.toList());
         return ApiResp.success(resultList);
     }
 

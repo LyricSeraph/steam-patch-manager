@@ -25,7 +25,7 @@ function loadPatchesByGame(game, page, size, expandFirstPatch) {
       for (const field of ['patchName', 'patchVersion', 'appVersion', 'description', 'reference']) {
         let desc = { key: '', name: '', value: ''}
         desc.key = field
-        desc.name = field
+        desc.name = getFieldName(field)
         desc.value = item[field]
         item.attrs.push(desc)
       }
@@ -132,6 +132,13 @@ function calculateSize(sizeInByte) {
   }
 }
 
+function getFieldName(field) {
+  const map = {
+    'patchName': 'Name', 'patchVersion': 'Patch Version', 'appVersion': 'Corresponding App Version', 'description': 'Description', 'reference': 'Reference URL'
+  }
+  return map[field]
+}
+
 function getPatchInputName(patchId, key) {
   return "patch-" + patchId + '-' + key
 }
@@ -214,7 +221,7 @@ onMounted(() => {
             <el-table border stripe :show-header="false"
                     :data="patch.attrs">
 
-              <el-table-column label="field" width="180px">
+              <el-table-column label="field" width="240px">
                 <template #default="scope">
                   <div style="display: flex; align-items: center; height: 32px">
                     {{ scope.row.name }}
